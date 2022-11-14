@@ -1,11 +1,11 @@
 --- 
 # TinyTapeout project information
 project:
-  wokwi_id:    347497504164545108        # If using wokwi, set this to your project's ID
+  wokwi_id:    0        # If using wokwi, set this to your project's ID
   source_files:        # If using an HDL, set wokwi_id as 0 and uncomment and list your source files here. Source files must be in ./src
-    - counter.v
-    - decoder.v
-  top_module:  "Luthor2k_seven_segment_seconds"      # put the name of your top module here, make it unique by prepending your github username
+    - luthor2k_top_tto.v
+    - baudot.v
+  top_module:  "luthor2k_top_tto.v"      # put the name of your top module here, make it unique by prepending your github username
 
 # As everyone will have access to all designs, try to make it easy for someone new to your design to know what
 # it does and how to operate it.
@@ -16,11 +16,11 @@ project:
 documentation: 
   author:       "Arthur Hazleden"      # Your name
   discord:      "L2K20"      # Your discord handle
-  title:        "7 segment demo"      # Project title
-  description:  "This circuit will output a string of characters (’tiny tapeout’) to the 7-segment display."      # Short description of what your project does
-  how_it_works: "uses a register and some combinational logic"      # Longer description of how the project works
-  how_to_test:  "prayer and good vibes"      # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
-  external_hw:  ""      # Describe any external hardware needed
+  title:        "Baudot Converter"      # Project title
+  description:  "This circuit will convert ASCII serial data to baudot serial data provide the reverse funtion as well"      # Short description of what your project does
+  how_it_works: "UARTS and two conversion ROMs"      # Longer description of how the project works
+  how_to_test:  "Serial data in and see how it goes."      # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
+  external_hw:  "The ASCII is expected to come in/out from a USB-serial adapter. The baudot is a 60mA current loop so something hefty is required."      # Describe any external hardware needed
   language:     "verilog" # other examples include Verilog, Amaranth, VHDL, etc
   doc_link:     ""      # URL to longer form documentation, eg the README.md in your repository
   clock_hz:     1000       # Clock frequency in Hz (if required)
