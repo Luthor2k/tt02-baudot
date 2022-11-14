@@ -7,17 +7,19 @@ module luthor2k_top_tto
    output [7:0] io_out
    );
   
+  // INPUTS
   wire                      clk   = io_in[0];
-  wire                      reset = io_in[1];
-  wire                      uart_tx_pin0;
-  wire                      uart_tx_pin1;
-  wire                      uart_tx_pin2;
+  wire                      ascii_in = io_in[1];
+  wire                      baudot_in = io_in[2];
+  
+  // OUTPUTS
+  wire                      ascii_out;
+  wire                      baudot_out;
+  
+  assign io_out[2] = ascii_out;
+  assign io_out[2] = baudot_out;  
 
-  assign io_out[0] = uart_tx_pin0;
-  assign io_out[1] = uart_tx_pin1;
-  assign io_out[2] = uart_tx_pin2;
-
-  // instatiate lcd
-  uart_tx uart_tx(.clk(clk), .reset(reset), .tx_pin0(uart_tx_pin0), .tx_pin1(uart_tx_pin1), .tx_pin2(uart_tx_pin2));
+  // instatiate converter
+  baudot baudot(.clk(clk), .ascii_in(ascii_in), .baudot_in(baudot_in), .ascii_out(ascii_out), .baudot_out(baudot_out));
   
 endmodule
