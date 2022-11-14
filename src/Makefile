@@ -5,7 +5,7 @@
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 
-VERILOG_SOURCES += $(PWD)/luthor2k_top_tto.v $(PWD)/baudot.v $(PWD)/baudot_fpga101_tb.v
+VERILOG_SOURCES += $(PWD)/luthor2k_top_tto.v $(PWD)/baudot.v $(PWD)/baudot_tb.v
 
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
 TOPLEVEL = luthor2k_top_tto
