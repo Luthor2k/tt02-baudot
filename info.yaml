@@ -4,7 +4,7 @@ project:
   wokwi_id:    0        # If using wokwi, set this to your project's ID
   source_files:        # If using an HDL, set wokwi_id as 0 and uncomment and list your source files here. Source files must be in ./src
     - luthor2k_top_tto.v
-    - baudot.v
+    - main.v
   top_module:  "luthor2k_top_tto.v"      # put the name of your top module here, make it unique by prepending your github username
 
 # As everyone will have access to all designs, try to make it easy for someone new to your design to know what
@@ -26,9 +26,9 @@ documentation:
   clock_hz:     1000       # Clock frequency in Hz (if required)
   picture:      ""      # relative path to a picture in your repository
   inputs:               # a description of what the inputs do
-    - clock
-    - reset
-    - none
+    - ascii clock at 8x desired baudrate
+    - baudot clock at 100x desired baudrate
+    - baudot input, should be held high when line is idle but connected
     - none
     - none
     - none
