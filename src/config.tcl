@@ -2,6 +2,9 @@
 # We will rebuild your GDS for the final submission using the information given in the yaml file only
 # If you get stuck with this config, please open an issue or get in touch via the discord.
 
+#as per announce:
+set ::env(CLOCK_PERIOD) "20000"
+
 # User config
 set script_dir [file dirname [file normalize [info script]]]
 
