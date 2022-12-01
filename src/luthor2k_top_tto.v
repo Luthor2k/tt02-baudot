@@ -8,18 +8,18 @@ module luthor2k_top_tto
    );
   
   // INPUTS
-  wire                      clk   = io_in[0];
-  wire                      ascii_in = io_in[1];
-  wire                      baudot_in = io_in[2];
+  wire                      clk_ascii   = io_in[0];
+  wire                      clk_baudot = io_in[1];
+  wire                      baudot_input = io_in[2];
   
   // OUTPUTS
-  wire                      ascii_out;
-  wire                      baudot_out;
+  wire                      ascii_serial_output;
+  wire                      baudot_ready_out;
   
-  assign io_out[2] = ascii_out;
-  assign io_out[2] = baudot_out;  
+  assign io_out[0] = ascii_serial_output;
+  assign io_out[1] = baudot_ready_out;  
 
-  // instatiate converter
-  baudot baudot(.clk(clk), .ascii_in(ascii_in), .baudot_in(baudot_in), .ascii_out(ascii_out), .baudot_out(baudot_out));
+  // instatiate converter  .function_pin(top_pin)
+  baudot baudot(.vee2c6c(clk_ascii), .ve9039a(clk_baudot), .vcb44a7(baudot_input), .v7c2fea(ascii_serial_output), .v0fbb9e(baudot_ready_out));
   
 endmodule
