@@ -27,6 +27,8 @@ OUT6 - Baudot bit 3
 OUT7 - Baudot bit 4
 ```
 
+![Iamge of teletype setup](https://github.com/Luthor2k/tt02-baudot/blob/main/teleprinter-test.jpg)
+
 ## What is Tiny Tapeout?
 
 TinyTapeout is an educational project that aims to make it easier and cheaper than ever to get your digital designs manufactured on a real chip!
