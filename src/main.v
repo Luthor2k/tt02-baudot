@@ -4,327 +4,61 @@
 
 //---- Top entity
 module main #(
- parameter v11011d = 100,
- parameter v02d202 = 8
+ parameter v11011d = 50,
+ parameter v02d202 = 1
 ) (
- input ve9039a, //clk_baudot
- input vee2c6c, //clk_ascii
- input vcb44a7, //baudot_input
- output v0fbb9e,//baudot_ready_out
- output v7c2fea //ascii_serial_output
+ input v3c4a34,
+ input vcb44a7,
+ input v65b531,
+ output v40cda4,
+ output v7c2fea,
+ output [4:0] v4d3fdd
 );
  localparam p0 = v11011d;
  localparam p1 = v02d202;
  wire w2;
- wire [0:7] w3;
- wire [0:7] w4;
+ wire w3;
+ wire w4;
  wire w5;
- wire w6;
+ wire [0:7] w6;
  wire w7;
  wire w8;
  wire w9;
- wire w10;
- assign v7c2fea = w6;
- assign w7 = vcb44a7;
- assign w8 = ve9039a;
- assign w9 = vee2c6c;
- assign v0fbb9e = w10;
- assign w5 = w2;
- assign w10 = w2;
- assign w10 = w5;
+ wire [0:4] w10;
+ wire [0:4] w11;
+ assign w2 = v3c4a34;
+ assign w3 = vcb44a7;
+ assign v40cda4 = w4;
+ assign w7 = v65b531;
+ assign v7c2fea = w9;
+ assign v4d3fdd = w11;
+ assign w5 = w4;
+ assign w8 = w4;
+ assign w8 = w5;
+ assign w11 = w10;
+ main_vc9d136 #(
+  .CLKS_PER_BIT(p1)
+ ) vc9d136 (
+  .ascii_byte_input(w6),
+  .clk_ascii(w7),
+  .ascii_start_input(w8),
+  .ascii_serial_output(w9)
+ );
  main_v9a0385 v9a0385 (
-  .clk(w2),
-  .BAUDOT_IN(w3),
-  .ASCII_OUT(w4)
+  .clk(w5),
+  .ASCII_OUT(w6),
+  .BAUDOT_IN(w10)
  );
  main_v4a3d40 #(
   .CLKS_PER_BIT(p0)
  ) v4a3d40 (
-  .baudot_ready_out(w2),
-  .baudot_byte_out(w3),
-  .baudot_input(w7),
-  .clk_baudot(w8)
- );
- main_vc9d136 #(
-  .CLKS_PER_BIT(p1)
- ) vc9d136 (
-  .ascii_byte_input(w4),
-  .ascii_start_input(w5),
-  .ascii_serial_output(w6),
-  .clk_ascii(w9)
+  .clk_baudot(w2),
+  .baudot_input(w3),
+  .baudot_ready_out(w4),
+  .baudot_byte_out(w10)
  );
 endmodule
 
-
-module main_v9a0385 (
- input clk,
- input [7:0] BAUDOT_IN,
- output [7:0] ASCII_OUT
-);
- //-- lettersrom memory
- reg [7:0] lettersrom [0:31];
- 
- reg [7:0] numbersrom [0:31];
- 
- //-- ASCII_INPUT (8 bits)
- wire [7:0] BAUDOT_IN;
- 
- //-- Baudot OUTPUT (5 bits)
- reg [7:0] ASCII_OUT;
- 
- reg enable_numbers = 0; //default to letter set
- 
- always @(posedge clk) begin
-   //are we receiving a letters or numbers set change?
-   if (BAUDOT_IN == 27)
-     begin
-       enable_numbers <= 1; // set to figs mode
-     end
-   if (BAUDOT_IN == 31)
-     begin
-       enable_numbers <= 0; // set to letters  mode
-     end  
-   if (enable_numbers == 0)
-     begin
-       ASCII_OUT <= lettersrom[BAUDOT_IN];
-     end
-   else
-     begin
-       ASCII_OUT <= numbersrom[BAUDOT_IN];
-     end
- end
- 
-   initial begin
-     lettersrom[0] = 8'h00; // NUL
-     lettersrom[1] = 8'h45; // E
-     lettersrom[2] = 8'h0A; // LF
-     lettersrom[3] = 8'h41; // A
-     lettersrom[4] = 8'h20; // SP
-     lettersrom[5] = 8'h53; // S
-     lettersrom[6] = 8'h49; // I
-     lettersrom[7] = 8'h55; // U
-     lettersrom[8] = 8'h0D; // CR **** modding to 0A(LF) from 0D(CR) for tests
-     lettersrom[9] = 8'h44; // D
-     lettersrom[10] = 8'h52; // R
-     lettersrom[11] = 8'h4A; // J
-     lettersrom[12] = 8'h4E; // N
-     lettersrom[13] = 8'h46; // F
-     lettersrom[14] = 8'h43; // C
-     lettersrom[15] = 8'h4B; // K
-     
-     lettersrom[16] = 8'h54; // T
-     lettersrom[17] = 8'h5A; // Z
-     lettersrom[18] = 8'h4C; // L
-     lettersrom[19] = 8'h57; // W
-     lettersrom[20] = 8'h48; // H
-     lettersrom[21] = 8'h59; // Y
-     lettersrom[22] = 8'h50; // P
-     lettersrom[23] = 8'h51; // Q
-     lettersrom[24] = 8'h4F; // O
-     lettersrom[25] = 8'h42; // B
-     lettersrom[26] = 8'h47; // G
-     lettersrom[27] = 8'h00; // FIGS, h23 is #
-     lettersrom[28] = 8'h4D; // M
-     lettersrom[29] = 8'h58; // X
-     lettersrom[30] = 8'h56; // V
-     lettersrom[31] = 8'h08; // LTRS/DEL, h08 is DEL, to be sent when in LTRS mode only
-     
-     numbersrom[0] = 8'h00; // NUL
-     numbersrom[1] = 8'h33; // 3
-     numbersrom[2] = 8'h0A; // LF
-     numbersrom[3] = 8'h2D; // -
-     numbersrom[4] = 8'h20; // SP
-     //numbersrom[5] = 8'h07; // BEL
-     numbersrom[5] = 8'h27; // '
-     numbersrom[6] = 8'h38; // 8
-     numbersrom[7] = 8'h37; // 7
-     numbersrom[8] = 8'h0D; // CR
-     numbersrom[9] = 8'h24; // $
-     numbersrom[10] = 8'h34; // 4
-     //numbersrom[11] = 8'h27; // '
-     numbersrom[11] = 8'h07; // BEL
-     numbersrom[12] = 8'h2C; // ,
-     numbersrom[13] = 8'h23; // #
-     numbersrom[14] = 8'h3A; // :
-     numbersrom[15] = 8'h28; // (
-     
-     numbersrom[16] = 8'h35; //10 5
-     numbersrom[17] = 8'h22; //11 "
-     numbersrom[18] = 8'h29; //12 )
-     numbersrom[19] = 8'h32; //13 2
-     numbersrom[20] = 8'h21; //14 should be UK # but hammer is missing! will make ! instead
-     numbersrom[21] = 8'h36; // 6
-     numbersrom[22] = 8'h30; // 0
-     numbersrom[23] = 8'h31; // 1
-     numbersrom[24] = 8'h39; // 9
-     numbersrom[25] = 8'h3F; // ?
-     numbersrom[26] = 8'h26; // &
-     numbersrom[27] = 8'h00; // FIGS, h23 is #
-     numbersrom[28] = 8'h2E; // .
-     numbersrom[29] = 8'h2F; // /
-     numbersrom[30] = 8'h3B; // ;
-     numbersrom[31] = 8'h00; // LTRS, so send null
-    end
- 
-endmodule
-
-module main_v4a3d40 #(
- parameter CLKS_PER_BIT = 0
-) (
- input clk_baudot,
- input baudot_input,
- output baudot_ready_out,
- output [7:0] baudot_byte_out
-);
- //////////////////////////////////////////////////////////////////////
- // File Downloaded from http://www.nandland.com
- //////////////////////////////////////////////////////////////////////
- // This file contains the UART Receiver.  This receiver is able to
- // receive 8 bits of serial data, one start bit, one stop bit,
- // and no parity bit.  When receive is complete o_rx_dv will be
- // driven high for one clock cycle.
- // 
- // Set Parameter CLKS_PER_BIT as follows:
- // CLKS_PER_BIT = (Frequency of clk_baudot)/(Frequency of UART)
- // Example: 10 MHz Clock, 115200 baud UART
- // (10000000)/(115200) = 87
-   
- 
- // !!!!! MODIFIED FOR FIVE BITS !!!!!
- 
-   //parameter CLKS_PER_BIT,
-   
-   wire        baudot_clock;
-   wire        baudot_input;
-   //output       o_Rx_DV;
-   //output [7:0] o_Rx_Byte;
-     
-   parameter s_IDLE         = 3'b000;
-   parameter s_RX_START_BIT = 3'b001;
-   parameter s_RX_DATA_BITS = 3'b010;
-   parameter s_RX_STOP_BIT  = 3'b011;
-   parameter s_CLEANUP      = 3'b100;
-    
-   reg           r_Rx_Data_R = 1'b1;
-   reg           r_Rx_Data   = 1'b1;
-    
-   reg [7:0]     r_Clock_Count = 0;
-   reg [2:0]     r_Bit_Index   = 0; //8 bits total
-   reg [7:0]     r_Rx_Byte     = 0;
-   reg           r_Rx_DV       = 0;
-   reg [2:0]     r_SM_Main     = 0;
-    
-   // Purpose: Double-register the incoming data.
-   // This allows it to be used in the UART RX Clock Domain.
-   // (It removes problems caused by metastability)
-   always @(posedge clk_baudot)
-     begin
-       r_Rx_Data_R <= baudot_input;
-       r_Rx_Data   <= r_Rx_Data_R;
-     end
-    
-    
-   // Purpose: Control RX state machine
-   always @(posedge clk_baudot)
-     begin
-        
-       case (r_SM_Main)
-         s_IDLE :
-           begin
-             r_Rx_DV       <= 1'b0;
-             r_Clock_Count <= 0;
-             r_Bit_Index   <= 0;
-              
-             if (r_Rx_Data == 1'b0)          // Start bit detected
-               r_SM_Main <= s_RX_START_BIT;
-             else
-               r_SM_Main <= s_IDLE;
-           end
-          
-         // Check middle of start bit to make sure it's still low
-         s_RX_START_BIT :
-           begin
-             if (r_Clock_Count == (CLKS_PER_BIT-1)/2)
-               begin
-                 if (r_Rx_Data == 1'b0)
-                   begin
-                     r_Clock_Count <= 0;  // reset counter, found the middle
-                     r_SM_Main     <= s_RX_DATA_BITS;
-                   end
-                 else
-                   r_SM_Main <= s_IDLE;
-               end
-             else
-               begin
-                 r_Clock_Count <= r_Clock_Count + 1;
-                 r_SM_Main     <= s_RX_START_BIT;
-               end
-           end // case: s_RX_START_BIT
-          
-          
-         // Wait CLKS_PER_BIT-1 clock cycles to sample serial data
-         s_RX_DATA_BITS :
-           begin
-             if (r_Clock_Count < CLKS_PER_BIT-1)
-               begin
-                 r_Clock_Count <= r_Clock_Count + 1;
-                 r_SM_Main     <= s_RX_DATA_BITS;
-               end
-             else
-               begin
-                 r_Clock_Count          <= 0;
-                 r_Rx_Byte[r_Bit_Index] <= r_Rx_Data;
-                  
-                 // Check if we have received all bits
-                 if (r_Bit_Index < 4)
-                   begin
-                     r_Bit_Index <= r_Bit_Index + 1;
-                     r_SM_Main   <= s_RX_DATA_BITS;
-                   end
-                 else
-                   begin
-                     r_Bit_Index <= 0;
-                     r_SM_Main   <= s_RX_STOP_BIT;
-                   end
-               end
-           end // case: s_RX_DATA_BITS
-      
-      
-         // Receive Stop bit.  Stop bit = 1
-         s_RX_STOP_BIT :
-           begin
-             // Wait CLKS_PER_BIT-1 clock cycles for Stop bit to finish
-             if (r_Clock_Count < CLKS_PER_BIT-1)
-               begin
-                 r_Clock_Count <= r_Clock_Count + 1;
-                 r_SM_Main     <= s_RX_STOP_BIT;
-               end
-             else
-               begin
-                 r_Rx_DV       <= 1'b1;
-                 r_Clock_Count <= 0;
-                 r_SM_Main     <= s_CLEANUP;
-               end
-           end // case: s_RX_STOP_BIT
-      
-          
-         // Stay here 1 clock
-         s_CLEANUP :
-           begin
-             r_SM_Main <= s_IDLE;
-             r_Rx_DV   <= 1'b0;
-           end
-          
-          
-         default :
-           r_SM_Main <= s_IDLE;
-          
-       endcase
-     end   
-    
-   assign baudot_ready_out   = r_Rx_DV;
-   assign baudot_byte_out = r_Rx_Byte;
-endmodule
 
 module main_vc9d136 #(
  parameter CLKS_PER_BIT = 0
@@ -481,4 +215,274 @@ module main_vc9d136 #(
    assign ascii_serial_output = r_Tx_Serial;
    assign ascii_serial_active = r_Tx_Active;
    assign ascii_serial_done   = r_Tx_Done;
+endmodule
+
+module main_v9a0385 (
+ input clk,
+ input [4:0] BAUDOT_IN,
+ output [7:0] ASCII_OUT
+);
+ //-- lettersrom memory
+ reg [7:0] lettersrom [0:31];
+ 
+ reg [7:0] numbersrom [0:31];
+ 
+ //-- ASCII_INPUT (8 bits)
+ wire [4:0] BAUDOT_IN;
+ 
+ //-- Baudot OUTPUT (5 bits)
+ reg [7:0] ASCII_OUT;
+ 
+ reg enable_numbers = 0; //default to letter set
+ 
+ always @(posedge clk) begin
+   //are we receiving a letters or numbers set change?
+   if (BAUDOT_IN == 27)
+     begin
+       enable_numbers <= 1; // set to figs mode
+     end
+   if (BAUDOT_IN == 31)
+     begin
+       enable_numbers <= 0; // set to letters  mode
+     end  
+   if (enable_numbers == 0)
+     begin
+       ASCII_OUT <= lettersrom[BAUDOT_IN];
+     end
+   else
+     begin
+       ASCII_OUT <= numbersrom[BAUDOT_IN];
+     end
+ end
+ 
+   initial begin
+     lettersrom[0] = 8'h00; // NUL
+     lettersrom[1] = 8'h45; // E
+     lettersrom[2] = 8'h0A; // LF
+     lettersrom[3] = 8'h41; // A
+     lettersrom[4] = 8'h20; // SP
+     lettersrom[5] = 8'h53; // S
+     lettersrom[6] = 8'h49; // I
+     lettersrom[7] = 8'h55; // U
+     lettersrom[8] = 8'h0D; // CR 
+     lettersrom[9] = 8'h44; // D
+     lettersrom[10] = 8'h52; // R
+     lettersrom[11] = 8'h4A; // J
+     lettersrom[12] = 8'h4E; // N
+     lettersrom[13] = 8'h46; // F
+     lettersrom[14] = 8'h43; // C
+     lettersrom[15] = 8'h4B; // K
+     
+     lettersrom[16] = 8'h54; // T
+     lettersrom[17] = 8'h5A; // Z
+     lettersrom[18] = 8'h4C; // L
+     lettersrom[19] = 8'h57; // W
+     lettersrom[20] = 8'h48; // H
+     lettersrom[21] = 8'h59; // Y
+     lettersrom[22] = 8'h50; // P
+     lettersrom[23] = 8'h51; // Q
+     lettersrom[24] = 8'h4F; // O
+     lettersrom[25] = 8'h42; // B
+     lettersrom[26] = 8'h47; // G
+     lettersrom[27] = 8'h00; // FIGS, h23 is #
+     lettersrom[28] = 8'h4D; // M
+     lettersrom[29] = 8'h58; // X
+     lettersrom[30] = 8'h56; // V
+     lettersrom[31] = 8'h08; // LTRS/DEL, h08 is DEL, to be sent when in LTRS mode only
+     
+     numbersrom[0] = 8'h00; // NUL
+     numbersrom[1] = 8'h33; // 3
+     numbersrom[2] = 8'h0A; // LF
+     numbersrom[3] = 8'h2D; // -
+     numbersrom[4] = 8'h20; // SP
+     //numbersrom[5] = 8'h07; // BEL
+     numbersrom[5] = 8'h27; // '
+     numbersrom[6] = 8'h38; // 8
+     numbersrom[7] = 8'h37; // 7
+     numbersrom[8] = 8'h0D; // CR
+     numbersrom[9] = 8'h24; // $
+     numbersrom[10] = 8'h34; // 4
+     //numbersrom[11] = 8'h27; // '
+     numbersrom[11] = 8'h07; // BEL
+     numbersrom[12] = 8'h2C; // ,
+     numbersrom[13] = 8'h23; // #
+     numbersrom[14] = 8'h3A; // :
+     numbersrom[15] = 8'h28; // (
+     
+     numbersrom[16] = 8'h35; //10 5
+     numbersrom[17] = 8'h22; //11 "
+     numbersrom[18] = 8'h29; //12 )
+     numbersrom[19] = 8'h32; //13 2
+     numbersrom[20] = 8'h21; //14 should be UK # but hammer is missing! will make ! instead
+     numbersrom[21] = 8'h36; // 6
+     numbersrom[22] = 8'h30; // 0
+     numbersrom[23] = 8'h31; // 1
+     numbersrom[24] = 8'h39; // 9
+     numbersrom[25] = 8'h3F; // ?
+     numbersrom[26] = 8'h26; // &
+     numbersrom[27] = 8'h00; // FIGS, h23 is #
+     numbersrom[28] = 8'h2E; // .
+     numbersrom[29] = 8'h2F; // /
+     numbersrom[30] = 8'h3B; // ;
+     numbersrom[31] = 8'h00; // LTRS, so send null
+    end
+ 
+endmodule
+
+module main_v4a3d40 #(
+ parameter CLKS_PER_BIT = 0
+) (
+ input clk_baudot,
+ input baudot_input,
+ output baudot_ready_out,
+ output [4:0] baudot_byte_out
+);
+ //////////////////////////////////////////////////////////////////////
+ // File Downloaded from http://www.nandland.com
+ //////////////////////////////////////////////////////////////////////
+ // This file contains the UART Receiver.  This receiver is able to
+ // receive 8 bits of serial data, one start bit, one stop bit,
+ // and no parity bit.  When receive is complete o_rx_dv will be
+ // driven high for one clock cycle.
+ // 
+ // Set Parameter CLKS_PER_BIT as follows:
+ // CLKS_PER_BIT = (Frequency of clk_baudot)/(Frequency of UART)
+ // Example: 10 MHz Clock, 115200 baud UART
+ // (10000000)/(115200) = 87
+   
+ 
+ // !!!!! MODIFIED FOR FIVE BITS !!!!!
+ 
+   //parameter CLKS_PER_BIT,
+   
+   wire        baudot_clock;
+   wire        baudot_input;
+   //output       o_Rx_DV;
+   //output [7:0] o_Rx_Byte;
+     
+   parameter s_IDLE         = 3'b000;
+   parameter s_RX_START_BIT = 3'b001;
+   parameter s_RX_DATA_BITS = 3'b010;
+   parameter s_RX_STOP_BIT  = 3'b011;
+   parameter s_CLEANUP      = 3'b100;
+    
+   reg           r_Rx_Data_R = 1'b1;
+   reg           r_Rx_Data   = 1'b1;
+    
+   reg [7:0]     r_Clock_Count = 0;
+   reg [2:0]     r_Bit_Index   = 0; //8 bits total
+   reg [7:0]     r_Rx_Byte     = 0;
+   reg           r_Rx_DV       = 0;
+   reg [2:0]     r_SM_Main     = 0;
+    
+   // Purpose: Double-register the incoming data.
+   // This allows it to be used in the UART RX Clock Domain.
+   // (It removes problems caused by metastability)
+   always @(posedge clk_baudot)
+     begin
+       r_Rx_Data_R <= baudot_input;
+       r_Rx_Data   <= r_Rx_Data_R;
+     end
+    
+    
+   // Purpose: Control RX state machine
+   always @(posedge clk_baudot)
+     begin
+        
+       case (r_SM_Main)
+         s_IDLE :
+           begin
+             r_Rx_DV       <= 1'b0;
+             r_Clock_Count <= 0;
+             r_Bit_Index   <= 0;
+              
+             if (r_Rx_Data == 1'b0)          // Start bit detected
+               r_SM_Main <= s_RX_START_BIT;
+             else
+               r_SM_Main <= s_IDLE;
+           end
+          
+         // Check middle of start bit to make sure it's still low
+         s_RX_START_BIT :
+           begin
+             if (r_Clock_Count == (CLKS_PER_BIT-1)/2)
+               begin
+                 if (r_Rx_Data == 1'b0)
+                   begin
+                     r_Clock_Count <= 0;  // reset counter, found the middle
+                     r_SM_Main     <= s_RX_DATA_BITS;
+                   end
+                 else
+                   r_SM_Main <= s_IDLE;
+               end
+             else
+               begin
+                 r_Clock_Count <= r_Clock_Count + 1;
+                 r_SM_Main     <= s_RX_START_BIT;
+               end
+           end // case: s_RX_START_BIT
+          
+          
+         // Wait CLKS_PER_BIT-1 clock cycles to sample serial data
+         s_RX_DATA_BITS :
+           begin
+             if (r_Clock_Count < CLKS_PER_BIT-1)
+               begin
+                 r_Clock_Count <= r_Clock_Count + 1;
+                 r_SM_Main     <= s_RX_DATA_BITS;
+               end
+             else
+               begin
+                 r_Clock_Count          <= 0;
+                 r_Rx_Byte[r_Bit_Index] <= r_Rx_Data;
+                  
+                 // Check if we have received all bits
+                 if (r_Bit_Index < 4)
+                   begin
+                     r_Bit_Index <= r_Bit_Index + 1;
+                     r_SM_Main   <= s_RX_DATA_BITS;
+                   end
+                 else
+                   begin
+                     r_Bit_Index <= 0;
+                     r_SM_Main   <= s_RX_STOP_BIT;
+                   end
+               end
+           end // case: s_RX_DATA_BITS
+      
+      
+         // Receive Stop bit.  Stop bit = 1
+         s_RX_STOP_BIT :
+           begin
+             // Wait CLKS_PER_BIT-1 clock cycles for Stop bit to finish
+             if (r_Clock_Count < CLKS_PER_BIT-1)
+               begin
+                 r_Clock_Count <= r_Clock_Count + 1;
+                 r_SM_Main     <= s_RX_STOP_BIT;
+               end
+             else
+               begin
+                 r_Rx_DV       <= 1'b1;
+                 r_Clock_Count <= 0;
+                 r_SM_Main     <= s_CLEANUP;
+               end
+           end // case: s_RX_STOP_BIT
+      
+          
+         // Stay here 1 clock
+         s_CLEANUP :
+           begin
+             r_SM_Main <= s_IDLE;
+             r_Rx_DV   <= 1'b0;
+           end
+          
+          
+         default :
+           r_SM_Main <= s_IDLE;
+          
+       endcase
+     end   
+    
+   assign baudot_ready_out   = r_Rx_DV;
+   assign baudot_byte_out = r_Rx_Byte;
 endmodule
