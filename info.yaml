@@ -19,8 +19,14 @@ documentation:
   title:        "Baudot Converter"      # Project title
   description:  "This circuit will convert 5-bit Baudot from a teletype machine to 8-bit ASCII."      # Short description of what your project does
   how_it_works: "Two UARTs, a clock divider and a conversion ROM"      # Longer description of how the project works
-  how_to_test:  "Provide 9600Hz at IN0 and 5000Hz at IN1. This sets up a 50 baud input and 9600 baud output. Us a PC set for 50 5n1 to drive the Baudot input. Check the baudot[4:0] pins and baudot_ready(OUT1) if the ASCII output isn't making sense."      # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
-  external_hw:  "An optoisolaor is required at the Baudot input (IN1). A USB serial adapter or RS232 converter should be connected at the ASCII output (OUT0). Hopefully the onboard clock can drive the ASCII UART at 9600 and lower baud. Baudot uses 45.5 Hz and a 100x clock divider drives the UART. Since the TTY machines are not always on spec, drive IN1 with an adjustable 4550 Hz source. Baudot Out Ready and baudot[4:0] are available for debugging purposes."      # Describe any external hardware needed
+  how_to_test:  | # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
+    "Provide 9600Hz at IN0 and 5000Hz at IN1. This sets up a 50 baud input and 9600 baud output.
+    Us a PC set for 50 5n1 to drive the Baudot input. Check the baudot[4:0] pins and baudot_ready(OUT1) if the ASCII output isn't making sense."
+  external_hw:  | # Describe any external hardware needed
+    "An optoisolaor is required at the Baudot input (IN1). A USB serial adapter or RS232 converter should be connected at the ASCII output (OUT0).
+    Hopefully the onboard clock can drive the ASCII UART at 9600 and lower baud. Baudot uses 45.5 Hz and a 100x clock divider drives the UART.
+    Since the TTY machines are not always on spec, drive IN1 with an adjustable 4550 Hz source. Baudot Out Ready and baudot[4:0] are available for
+    debugging purposes."
   language:     "verilog" # other examples include Verilog, Amaranth, VHDL, etc
   doc_link:     "https://github.com/Luthor2k/tt02-baudot/blob/main/README.md"      # URL to longer form documentation, eg the README.md in your repository
   clock_hz:     9600       # Clock frequency in Hz (if required)
